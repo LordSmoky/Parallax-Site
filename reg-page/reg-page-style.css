@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Edu+AU+VIC+WA+NT+Dots:wght@400..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --index: calc(1vw + 1vh);
+    --transition: 1s cubic-bezier(.05, .05, 0, 1);
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+.header {
+    display: flex;
+    position: absolute;
+    top: 1.5vh;
+    left: 5vw;
+    z-index: 1;
+}
+
+.back-to-mane__mini-logo {
+    width: 40px;
+    height: 40px;
+}
+
+.layers {
+    perspective: 1000px;
+    overflow: hidden;
+}
+
+.layers__containers {
+    height: 100vh;
+    min-height: 500px;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--move-y)) rotateY(var(--move-x));
+    will-change: transform;
+    transition: transform var(--transition);
+}
+
+.layers__item {
+    position: absolute;
+    inset: -5vw;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.layer-1 {
+    transform: translateZ(-55px) scale(1.06);
+}
+
+.layer-2 {
+    transform: translateZ(100px) scale(1.04);
+}
+
+.layer-3 {
+    transform: translateZ(200px) scale(.88);
+}
+
+.layer-4 {
+    transform: translateZ(250px);
+}
+
+.layer-5 {
+    transform: translateZ(300px);
+}
+
+.hero-content {
+    font-size: calc(var(--index) * 1.4);
+    letter-spacing: calc(var(--index) * .15);
+    line-height: 1.7em;
+    margin: clac(var(--index) * 5.5);
+    text-align: center;
+    text-transform: uppercase;
+    padding: 4vh;
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+.hero-content__p {
+    text-transform: none;
+    font-family: 'Edu AU VIC WA NT Dots';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    line-height: 2;
+    font-size: calc(var(--index) * 0.9);
+}
+
+.hero-content__input {
+    margin-top: calc(var(--index));
+    display: block;
+    align-items: center;
+    justify-content: center;
+
+
+}
+
+.hero-content-email,
+.hero-content-password {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2vh;
+}
+
+.hero-content-email-icon,
+.hero-content-password-icon {
+    height: 20px;
+    width: 20px;
+    margin-left: 1vw;
+}
+
+.hero-content-email-input,
+.hero-content-password-input {
+    padding: 1vh 1vw;
+    border-radius: 10em;
+    border-color: rgb(255 255 255 / .4) 2px solid;
+}
+
+.hero-content__button {
+    margin: 3vh;
+    padding: calc(var(--index) * .30) calc(var(--index) * .71);
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: calc(var(--index) * .75);
+    letter-spacing: -0.03vw;
+    background-color: transparent;
+    color: #fff;
+    border-radius: 10em;
+    border: rgb(255 255 255 / .4) 2px solid;
+    outline: none;
+    cursor: pointer;
+}
+
+.hero-content__p {
+    text-transform: none;
+    font-family: 'Edu AU VIC WA NT Dots';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    letter-spacing: 0.02;
+    line-height: 1;
+    font-size: calc(var(--index) * 0.6);
+}
+
+.hero-content__link {
+    text-transform: none;
+    font-family: 'Edu AU VIC WA NT Dots';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    letter-spacing: 0.01;
+    line-height: 1;
+    font-size: calc(var(--index) * 0.6);
+    text-decoration: none;
+    color: #ffffff3e;
+}
+
+.layer-5 {
+    pointer-events: none;
+}

@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Edu+AU+VIC+WA+NT+Dots:wght@400..700&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --index: calc(1vw + 1vh);
+    --transition: 1s cubic-bezier(.05, .05, 0, 1);
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+.header {
+    color: var(--dark-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    width: 100vw;
+    height: 10vh;
+    position: absolute;
+    z-index: 1;
+    margin-top: 0.5vh;
+}
+
+.header__logo-container {
+    position: absolute;
+    left: 5vw;
+    top: 1vh;
+}
+
+.mini-logo {
+    width: 40px;
+    height: 40px;
+}
+
+.header__search-catalog {
+    --header__search-catalog-size: calc(var(--index) * 15);
+    display: flex;
+    position: absolute;
+    align-items: center;
+    left: calc(50% - var(--header__search-catalog-size));
+    top: 1vh;
+
+}
+
+.header__catalog-link {
+    margin-right: 40px;
+    text-decoration: none;
+}
+
+.header__catalog-icon {
+    height: 35px;
+}
+
+.header__search-input {
+    background-color: transparent;
+    color:#fff;
+    border-radius: 20px;
+    border: rgb(255 255 255 / .4) 2px solid;
+    height: 44px;
+    width: 36vw;
+    padding: 20px;
+    font-size: 28px;
+    margin-right: 16px;
+    border: rgb(255 255 255 / .4) 2px solid;
+}
+
+.header__search-icon {
+    width: 24px; 
+    height: 24px;
+}
+
+.header__account-container {
+    position: absolute;
+    right: 5vw;
+    top: 2vh;
+}
+
+.header__cart-icon,
+.header__account-icon {
+    margin-left: 3vw;
+    height: 35px;
+    width: 35px;
+    
+}
+
+
+.logo {
+    --logo-size: calc(var(--index) * 10);
+    position: absolute;
+    display: flex;
+    background-repeat: no-repeat;
+    width: var(--logo-size);
+    height: var(--logo-size);
+    left: calc(50% - calc(var(--logo-size) / 2));
+    top: calc((var(--index) * 4));
+    z-index: 1;
+}
+
+.layers {
+    perspective: 1000px;
+    overflow: hidden;
+}
+
+.layers__containers {
+    height: 100vh;
+    min-height: 500px;
+    transform-style: preserve-3d;
+    transform:rotateX(var(--move-y)) rotateY(var(--move-x));
+    will-change: transform;
+    transition: transform var(--transition);
+}
+
+.layers__item {
+    position: absolute;
+    inset: -5vw;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.layer-1 {
+    transform: translateZ(-55px) scale(1.06);
+}
+.layer-2 {
+    transform: translateZ(100px) scale(1.04);
+}
+.layer-3 {
+    transform: translateZ(200px) scale(.88);
+}
+.layer-4 {
+    transform: translateZ(250px);
+}
+.layer-5 {
+    transform: translateZ(300px);
+}
+.hero-content {
+    font-size: calc(var(--index) * 1.4);
+    letter-spacing: calc(var(--index) * .15);
+    line-height: 1.7em;
+    margin: clac(var(--index) * 5.5);
+    text-align: center;
+    text-transform: uppercase;
+    
+}
+.hero-content span {
+    display: block;
+}
+
+.hero-content__p {
+    text-transform: none;
+    font-family: 'Edu AU VIC WA NT Dots';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    line-height: 2;
+    font-size: calc(var(--index) * 1.1);
+}
+
+.button-catalog {
+    margin: 3vh;
+    padding: calc(var(--index) * .50) calc(var(--index) * .71);
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: calc(var(--index) * .75);
+    letter-spacing: -0.03vw;
+    background-color: transparent;
+    color:#fff;
+    border-radius: 10em;
+    border: rgb(255 255 255 / .4) 2px solid;
+    outline: none;
+    cursor: pointer;
+
+}
+.layer-5 {
+    pointer-events: none;   
+}
