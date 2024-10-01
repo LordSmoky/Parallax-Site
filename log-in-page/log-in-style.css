@@ -160,13 +160,13 @@ body {
     text-transform: none;
     font-family: 'Edu AU VIC WA NT Dots';
     font-style: normal;
-    font-weight: 500;
+    font-weight: 700;
     font-display: swap;
     letter-spacing: 0.01;
     line-height: 1;
     font-size: calc(var(--index) * 0.6);
-    text-decoration: none;
-    color: #ffffff3e;
+    text-decoration:underline wavy;
+    color: #f2f2f2;
 }
 
 .layer-5 {
