@@ -7,3 +7,7 @@ document.addEventListener('mousemove', e => {
     })
 })
 
+document.getElementById('humburger').addEventListener('click', function() {
+    const nav = document.getElementById('nav');
+    nav.classList.toggle('active');
+});

@@ -19,7 +19,6 @@ body {
 
 
 .header {
-    color: var(--dark-gray);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -121,6 +120,46 @@ body {
     width: 35px;
     height: 35px;
 }
+
+.nav {
+    display: none; /* Hide the menu by default */
+    background-color: #342e30;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 30vw;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    font-family: 'Edu AU VIC WA NT Dots';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+}
+
+.nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.nav ul li {
+    padding: 10px;
+}
+
+.nav ul li a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.nav.active {
+    display: block; /* Show the menu when active */
+}
+
+.license{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: calc(var(--index) * .9);
+    margin:14px;
+}
+
 
 .layers {
     perspective: 1000px;
