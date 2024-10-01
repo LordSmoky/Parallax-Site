@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,40 +11,52 @@
 </head>
 
 <body>
-    <div class="header">
-        <div class="header__logo-container">
+    <div class="header__pc-format">
+        <div class="header">
+            <div class="header__logo-container">
                 <img src="img/mini-logo.svg" alt="umbrl" class="mini-logo">
+            </div>
+            <div class="header__search-catalog">
+                <a class="header__catalog-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                    <img src="img/catalog.svg" alt="Catalog" class="header__catalog-icon">
+                </a>
+                <input class="header__search-input" type="text" placeholder="Search...">
+                <img src="img/searchIcon.svg" alt="Search Icon" class="header__search-icon">
+            </div>
+            <div class="header__account-container">
+                <img src="img/cart.svg" alt="Cart" class="header__cart-icon">
+                <a href="log-in.html" class="header__account-container-link">
+                    <img src="img/account.svg" alt="Account" class="header__account-icon">
+                </a>
+            </div>
         </div>
-        <div class="header__search-catalog">
-            <a class="header__catalog-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"> 
-                <img src="img/catalog.svg" alt="Catalog" class="header__catalog-icon">
-            </a>
-            <input class="header__search-input" type="text" placeholder="Search...">
-            <img src="img/searchIcon.svg" alt="Search Icon" class="header__search-icon">
-        </div>
-        <div class="header__account-container">
-            
-            <img src="img/cart.svg" alt="Cart" class="header__cart-icon">
-            <a href="log-in.html" class="header__logo-container-link">   
-                <img src="img/account.svg" alt="Account" class="header__account-icon">
+    </div>
+    <div class="header__mobile-format">
+        <div class="header__menu__button-container">
+            <button class="header__menu__button">
+                <img src="img/home.svg" alt="Menu" class="header__menu__button-icon">
+            </button>
+        </div> 
+        <div class="header__account-m-container">
+            <a href="log-in.html" class="header__account-link">
+                <img src="img/account.svg" alt="Account" class="header__account-m-icon">
             </a>
         </div>
     </div>
 
     <div class="content">
-        <div class="logo"  style="background-image: url(img/logo.svg);"></div>
         <section class="layers">
             <div class="layers__containers">
                 <div class="layers__item layer-1" style="background-image: url(img/layer-1.png);"></div>
                 <div class="layers__item layer-2" style="background-image: url(img/layer-2.png);"></div>
                 <canvas class="rain"></canvas>
                 <div class="layers__item layer-3" style="background-image: url(img/layer-3.png);"></div>
-                    <div class="layers__item layer-4">
-                        <div class="hero-content">
-                            <h1>Umbrella's shop <span>Practic & Cute</span></h1>
-                            <div class="hero-content__p">Get ready to rain</div>
-                            <button class="button-catalog">Run catalog</button>
-                        </div>
+                <div class="layers__item layer-4">
+                    <div class="hero-content">
+                        <h1>Umbrella's shop <span>Practic & Cute</span></h1>
+                        <div class="hero-content__p">Get ready to rain</div>
+                        <button class="button-catalog">Run catalog</button>
+                    </div>
                 </div>
                 <div class="layers__item layer-5">
                     <canvas class="rain"></canvas>
@@ -53,4 +66,5 @@
     </div>
 
 </body>
+
 </html>
