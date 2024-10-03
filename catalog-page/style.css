@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Edu+AU+VIC+WA+NT+Dots:wght@400..700&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --index: calc(1vw + 1vh);
+    --transition: 1s cubic-bezier(.05, .05, 0, 1);
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    width: 100vw;
+    height: 10vh;
+    position: absolute;
+    z-index: 1;
+    margin-top: 0.5vh;
+}
+
+.header__logo-container {
+    position: absolute;
+    left: 5vw;
+    top: 1vh;
+}
+
+.mini-logo {
+    width: 40px;
+    height: 40px;
+}
+
+.header__search-catalog {
+    --header__search-catalog-size: calc(var(--index) * 15);
+    display: flex;
+    position: absolute;
+    align-items: center;
+    left: calc(50% - var(--header__search-catalog-size));
+    top: 1vh;
+    
+}
+
+select {
+    width: 100%;
+    height: 44px;
+    padding: 10px;
+    border-radius: 20px;
+    border: rgb(255 255 255 / .4) 2px solid;
+    font-size: 16px;
+    background-color: #2f3238;
+    color: #fff;
+}
+
+.filters {
+    margin-right: 40px;
+}
+
+.header__search-input {
+    background-color: #2f3238;
+    color:#fff;
+    border-radius: 20px;
+    border: rgb(255 255 255 / .4) 2px solid;
+    height: 44px;
+    width: 36vw;
+    padding: 20px;
+    font-size: 28px;
+    margin-right: 16px;
+    border: rgb(255 255 255 / .4) 2px solid;
+}
+
+.header__search-icon {
+    width: 24px; 
+    height: 24px;
+}
+
+.header__account-container {
+    position: absolute;
+    right: 5vw;
+    top: 2vh;
+}
+
+.header__cart-icon,
+.header__account-icon {
+    margin-left: 3vw;
+    height: 35px;
+    width: 35px;
+    
+}
+
+.header__mobile-format {
+    display: flex;
+    position: absolute;
+    z-index: 1;
+}
+
+.header__menu__button {
+    margin: 2vh 2vw;
+    padding: 0;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.header__account-m-container {
+    display: flex;
+    position: fixed;
+    top: 2vh;
+    right: 2vw;
+}
+
+.header__menu__button-icon,
+.header__account-m-icon {
+    display: flex;
+    width: 35px;
+    height: 35px;
+}
+
+
+
+.layers {
+    perspective: 1000px;
+    overflow: hidden;
+}
+
+.layers__containers {
+    height: 100vh;
+    min-height: 500px;
+    transform-style: preserve-3d;
+    transform:rotateX(var(--move-y)) rotateY(var(--move-x));
+    will-change: transform;
+    transition: transform var(--transition);
+}
+
+.layers__item {
+    position: absolute;
+    inset: -5vw;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.layer-1 {
+    transform: translateZ(-55px) scale(1.06);
+}
+.layer-2 {
+    transform: translateZ(100px) scale(1.04);
+}
+.layer-3 {
+    transform: translateZ(200px) scale(.88);
+}
+.layer-4 {
+    transform: translateZ(250px);
+}
+.layer-5 {
+    transform: translateZ(300px);
+}
+
+.layer-5 {
+    pointer-events: none;   
+}
+
+
+.container {
+    position: absolute;
+    top: 30%; right: 50%;
+    transform: translate(50%,-50%);
+    max-width: 90vw;
+    min-width: 70vw;
+    padding: 20px;
+    border-radius: 2rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    background-color: #2f3238;
+    justify-items: center;
+    align-items: center;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.product {
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    width: 140px;
+    height: 100px;
+    box-sizing: border-box;
+
+}
+
+.product h2 {
+    font-size: 1.2em;
+}
+
+.product p {
+    color: #555;
+}
+
+@media (max-width: 768px) {
+    .header__pc-format {
+        display: none;
+    }
+    
+    .header__mobile-format {
+        display: block;
+    }
+}
+
+@media (min-width: 768px) {
+    .header__pc-format {
+        display: block;
+    }
+    
+    .header__mobile-format {
+        display: none;
+    }
+}

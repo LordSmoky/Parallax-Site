@@ -5,22 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Umbrella</title>
-    <link rel="stylesheet" href="code/style.css">
-    <script src="code/scrip.js" defer></script>
-    <script src="libs/rain.js" defer></script>
+    <link rel="stylesheet" href="catalog-page/style.css">
+    <script src="code/scrip.js"></script>
+    <script src="libs/rain.js"></script>
 </head>
 
 <body>
+    
     <div class="header__pc-format">
         <div class="header">
             <div class="header__logo-container">
-                <img src="img/mini-logo.svg" alt="umbrl" class="mini-logo">
+                <a href="index.html">
+                    <img src="img/mini-logo.svg" alt="umbrl" class="mini-logo">
+                </a>
             </div>
             <div class="header__search-catalog">
-                <a class="header__catalog-link" href="catalog.html">
-                    <img src="img/catalog.svg" alt="Catalog" class="header__catalog-icon">
-                </a>
-                <input class="header__search-input" type="text" placeholder="Search...">
+                <div class="filters">
+                    <label for="category"></label>
+                    <select id="category">
+                        <option value="all">All</option>
+                        <option value="fulton">Fulton</option>
+                        <option value="clothing">Одежда</option>
+                        <option value="books">Книги</option>
+                    </select>
+                </div>
+                <input class="header__search-input" id="search" type="text" placeholder="Search...">
                 <img src="img/searchIcon.svg" alt="Search Icon" class="header__search-icon">
             </div>
             <div class="header__account-container">
@@ -37,23 +46,13 @@
                 <img src="img/home.svg" alt="Menu" class="header__menu__button-icon">
             </button>
         </div> 
-        <div class="header__humburger-container">
-            <nav class="nav" id="nav">
-                <ul>
-                    <li><a href="#">Catalog</a></li>
-                    <li><a href="#">Cart</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <p class="license">© 2024 Umbrella's shop.<br> All rights reserved.</p>
-                </ul>
-            </nav>
-           
-        </div>
         <div class="header__account-m-container">
             <a href="log-in.html" class="header__account-link">
                 <img src="img/account.svg" alt="Account" class="header__account-m-icon">
             </a>
         </div>
     </div>
+
 
     <div class="content">
         <section class="layers">
@@ -63,11 +62,7 @@
                 <canvas class="rain"></canvas>
                 <div class="layers__item layer-3" style="background-image: url(img/layer-3.png);"></div>
                 <div class="layers__item layer-4">
-                    <div class="hero-content">
-                        <h1>Umbrella's shop <span>Practic & Cute</span></h1>
-                        <div class="hero-content__p">Get ready to rain</div>
-                        <button class="button-catalog">Run catalog</button>
-                    </div>
+                   
                 </div>
                 <div class="layers__item layer-5">
                     <canvas class="rain"></canvas>
@@ -75,7 +70,13 @@
             </div>
         </section>
     </div>
+    
+    <div class="container">
+        <div id="product-list" class="product-list">
+            
+        </div>
+    </div>
 
+    <script src="catalog-page/scrip.js"></script>   
 </body>
-
 </html>
