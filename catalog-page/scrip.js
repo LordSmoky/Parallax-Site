@@ -5,6 +5,18 @@ const products = [
     { id: 4, name: 'Джинсы', category: 'clothing' },
     { id: 5, name: 'Книга', category: 'books' },
     { id: 6, name: 'Pen09IIs', category: 'fulton' },
+    { id: 7, name: 'Супер-сковорода', category: 'kitchen' },
+    { id: 8, name: 'Невидимая ручка', category: 'office' },
+    { id: 9, name: 'Кроссовки для дивана', category: 'footwear' },
+    { id: 10, name: 'Умный холодильник', category: 'appliances' },
+    { id: 11, name: 'Книга по саморазвитию для ленивых', category: 'books' },
+    { id: 12, name: 'Чашка с секретом', category: 'kitchen' },
+    { id: 13, name: 'Футболка с надписью "Я не сплю, я отдыхаю"', category: 'clothing' },
+    { id: 14, name: 'Супер-удобное кресло', category: 'furniture' },
+    { id: 15, name: 'Портативный диван', category: 'furniture' },
+    { id: 16, name: 'Книга для чтения в ванной', category: 'books' },
+    { id: 17, name: 'Секретный соус', category: 'kitchen' },
+    { id: 18, name: 'Носки с антиподъемом', category: 'clothing' },
 ];
 
 function displayProducts(filterCategory = 'all', searchTerm = '') {

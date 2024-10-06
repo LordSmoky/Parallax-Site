@@ -186,10 +186,11 @@ option {
 
 .container {
     position: absolute;
-    top: 30%; right: 50%;
+    top: 50%; right: 50%;
     transform: translate(50%,-50%);
     max-width: 90vw;
     min-width: 70vw;
+    height: 70vh;
     padding: 20px;
     border-radius: 2rem;
     backdrop-filter: blur(25px) saturate(200%);
@@ -200,6 +201,11 @@ option {
     z-index: 1;
     justify-items: center;
     align-items: center;
+    overflow: hidden;
+}
+
+.container:hover {
+    overflow: scroll;
 }
 
 .product-list {
@@ -218,7 +224,7 @@ option {
     width: 140px;
     height: 100px;
     box-sizing: border-box;
-
+    background-color: #000;
 }
 
 .product h2 {
@@ -226,7 +232,7 @@ option {
 }
 
 .product p {
-    color: #555;
+    color: #7a7a7a;
 }
 
 @media (max-width: 768px) {
@@ -247,4 +253,21 @@ option {
     .header__mobile-format {
         display: none;
     }
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #32161b;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(121, 0, 0);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(140, 0, 255);
 }
