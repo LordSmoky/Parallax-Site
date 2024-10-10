@@ -21,19 +21,13 @@ body {
 .header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     background-color: transparent;
     width: 100vw;
     height: 10vh;
     position: absolute;
     z-index: 1;
     margin-top: 0.5vh;
-}
-
-.header__logo-container {
-    position: absolute;
-    left: 5vw;
-    top: 1vh;
 }
 
 .mini-logo {
@@ -44,11 +38,10 @@ body {
 .header__search-catalog {
     --header__search-catalog-size: calc(var(--index) * 15);
     display: flex;
-    position: absolute;
     align-items: center;
     left: calc(50% - var(--header__search-catalog-size));
     top: 1vh;
-
+    width: 50vw;
 }
 
 .header__catalog-link {
@@ -60,33 +53,22 @@ body {
     height: 35px;
 }
 
-.header__search-input {
-    background-color: transparent;
-    color:#fff;
-    border-radius: 20px;
-    border: rgb(255 255 255 / .4) 2px solid;
-    height: 44px;
-    width: 36vw;
-    padding: 20px;
-    font-size: 28px;
-    margin-right: 16px;
-    border: rgb(255 255 255 / .4) 2px solid;
-}
-
-.header__search-icon {
-    width: 24px; 
-    height: 24px;
+.header__search-catalog__img {
+    min-width: 36vw;
+    max-height: 35px;
+    object-fit: cover;
+    border-radius: 10em;
 }
 
 .header__account-container {
-    position: absolute;
-    right: 5vw;
-    top: 2vh;
+    display: flex;
+    max-height: 35px;
+    width: 120px;
+    justify-content: space-between;
 }
 
 .header__cart-icon,
 .header__account-icon {
-    margin-left: 3vw;
     height: 35px;
     width: 35px;
     
@@ -258,7 +240,7 @@ body {
     .header__pc-format {
         display: block;
     }
-    
+
     .header__mobile-format {
         display: none;
     }

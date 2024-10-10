@@ -16,22 +16,18 @@ body {
     color: #fff;
 }
 
+
+
 .header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     background-color: transparent;
     width: 100vw;
     height: 10vh;
     position: absolute;
     z-index: 1;
     margin-top: 0.5vh;
-}
-
-.header__logo-container {
-    position: absolute;
-    left: 5vw;
-    top: 1vh;
 }
 
 .mini-logo {
@@ -42,7 +38,6 @@ body {
 .header__search-catalog {
     --header__search-catalog-size: calc(var(--index) * 15);
     display: flex;
-    position: absolute;
     align-items: center;
     left: calc(50% - var(--header__search-catalog-size));
     top: 1vh;
@@ -74,6 +69,10 @@ option {
     margin-right: 40px;
 }
 
+.header__search-catalog {
+    width: 50vw;
+}
+
 .header__search-input {
     color:#fff;
     backdrop-filter: blur(25px) saturate(200%);
@@ -94,14 +93,14 @@ option {
 }
 
 .header__account-container {
-    position: absolute;
-    right: 5vw;
-    top: 2vh;
+    display: flex;
+    max-height: 35px;
+    width: 120px;
+    justify-content: space-between;
 }
 
 .header__cart-icon,
 .header__account-icon {
-    margin-left: 3vw;
     height: 35px;
     width: 35px;
     
@@ -201,12 +200,10 @@ option {
     z-index: 1;
     justify-items: center;
     align-items: center;
-    overflow: hidden;
-}
-
-.container:hover {
     overflow: scroll;
 }
+
+
 
 .product-list {
     display: flex;
@@ -243,6 +240,7 @@ option {
     .header__mobile-format {
         display: block;
     }
+
 }
 
 @media (min-width: 768px) {
@@ -252,6 +250,12 @@ option {
     
     .header__mobile-format {
         display: none;
+    }
+    .container {
+        overflow:hidden;
+    }
+    .container:hover {
+        overflow: scroll;
     }
 }
 
