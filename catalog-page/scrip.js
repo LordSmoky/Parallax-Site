@@ -1,24 +1,20 @@
-const products = [
-    { id: 1, name: 'Ul1201', category: 'fulton' },
-    { id: 2, name: 'K1000FN', category: 'fulton' },
-    { id: 3, name: 'Футболка', category: 'clothing' },
-    { id: 4, name: 'Джинсы', category: 'clothing' },
-    { id: 5, name: 'Книга', category: 'books' },
-    { id: 6, name: 'Pen09IIs', category: 'fulton' },
-    { id: 7, name: 'Супер-сковорода', category: 'kitchen' },
-    { id: 8, name: 'Невидимая ручка', category: 'office' },
-    { id: 9, name: 'Кроссовки для дивана', category: 'footwear' },
-    { id: 10, name: 'Умный холодильник', category: 'appliances' },
-    { id: 11, name: 'Книга по саморазвитию для ленивых', category: 'books' },
-    { id: 12, name: 'Чашка с секретом', category: 'kitchen' },
-    { id: 13, name: 'Футболка с надписью "Я не сплю, я отдыхаю"', category: 'clothing' },
-    { id: 14, name: 'Супер-удобное кресло', category: 'furniture' },
-    { id: 15, name: 'Портативный диван', category: 'furniture' },
-    { id: 16, name: 'Книга для чтения в ванной', category: 'books' },
-    { id: 17, name: 'Секретный соус', category: 'kitchen' },
-    { id: 18, name: 'Носки с антиподъемом', category: 'clothing' },
-];
+let products = [];
 
+// Функция для загрузки продуктов из базы данных
+async function loadProducts() {
+    try {
+        const response = await fetch('/products');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        products = await response.json();
+        displayProducts(); // Отобразить загруженные продукты
+    } catch (error) {
+        console.error('Ошибка при загрузке продуктов:', error);
+    }
+}
+
+// Функция для отображения продуктов
 function displayProducts(filterCategory = 'all', searchTerm = '') {
     const productList = document.getElementById('product-list');
     productList.innerHTML = '';
@@ -32,11 +28,12 @@ function displayProducts(filterCategory = 'all', searchTerm = '') {
     filteredProducts.forEach(product => {
         const productDiv = document.createElement('div');
         productDiv.className = 'product';
-        productDiv.innerHTML = `<h2>${product.name}</h2><p>Brend: ${product.category}</p>`;
+        productDiv.innerHTML = `<h2>${product.name}</h2><p>Бренд: ${product.brand}</p><p>Цена: ${product.price}</p>`;
         productList.appendChild(productDiv);
     });
 }
 
+// Обработчики событий для поиска и фильтрации
 document.getElementById('search').addEventListener('input', (event) => {
     const searchTerm = event.target.value;
     const category = document.getElementById('category').value;
@@ -49,5 +46,5 @@ document.getElementById('category').addEventListener('change', (event) => {
     displayProducts(category, searchTerm);
 });
 
-// Изначально отображаем все продукты
-displayProducts();
+// Вызов функции загрузки продуктов при загрузке страницы
+loadProducts();

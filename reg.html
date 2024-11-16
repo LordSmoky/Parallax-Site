@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Umbrella</title>
     <link rel="stylesheet" href="reg-page/reg-style.css">
-    <script src="reg-page/reg-scrip.js" defer></script>
+
     <script src="libs/rain.js" defer></script>
 </head>
 
@@ -24,29 +25,29 @@
                 <div class="layers__item layer-2" style="background-image: url(img/layer-2.png);"></div>
                 <canvas class="rain"></canvas>
                 <div class="layers__item layer-3" style="background-image: url(img/layer-3.png);"></div>
-                    <div class="layers__item layer-4">
+                <div class="layers__item layer-4">
+                    <form id="registerForm">
                         <div class="hero-content">
                             <h1 class="hero-content-reg">Creating</h1>
                             <div class="hero-content__input">
-                                <div class="hero-content-name">
-                                    <input class="hero-content-name-input" type="text" placeholder="Name" required>
-                                    <img src="img/name-badje.svg" alt="N" class="hero-content-name-icon">
-                                </div>
                                 <div class="hero-content-email">
-                                    <input class="hero-content-email-input" type="text" placeholder="Login" required>
+                                    <input class="hero-content-email-input" type="text" placeholder="Login" name="email" required>
                                     <img src="img/account.svg" alt="A" class="hero-content-email-icon">
                                 </div>
                                 <div class="hero-content-password">
-                                    <input class="hero-content-password-input" type="text" placeholder="Password" required>
-                                    <img src="img/locker.svg" alt="P" class="hero-content-password-icon">
+                                    <input class="hero-content-password-input" type="text" name="password" placeholder="Password"
+                                        required>
+                                    <img src="img/locker.svg" alt="P" class="hero-content-password-icon" >
                                 </div>
                                 <div class="hero-content-2d-password">
-                                    <input class="hero-content-2d-password-input" type="text" placeholder="2-d Password" required>
+                                    <input class="hero-content-2d-password-input" type="text" name="secondPassword" placeholder="2-d Password"
+                                        required>
                                     <img src="img/double-locker.svg" alt="2d-P" class="hero-content-2d-password-icon">
                                 </div>
                             </div>
-                            <button class="hero-content__button">CREATE NOW</button>
+                            <button type="submit" class="hero-content__button">CREATE NOW</button>
                         </div>
+                    </form>
                 </div>
                 <div class="layers__item layer-5">
                     <canvas class="rain"></canvas>
@@ -54,6 +55,6 @@
             </div>
         </section>
     </div>
-
+    <script src="reg-page/reg-scrip.js" defer></script>
 </body>
 </html>

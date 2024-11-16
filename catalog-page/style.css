@@ -200,7 +200,7 @@ option {
     z-index: 1;
     justify-items: center;
     align-items: center;
-    overflow: scroll;
+    overflow: auto;
 }
 
 
@@ -256,7 +256,7 @@ option {
         overflow:hidden;
     }
     .container:hover {
-        overflow: scroll;
+        overflow-y: scroll;
     }
 }
 

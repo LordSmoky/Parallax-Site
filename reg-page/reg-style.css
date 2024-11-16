@@ -108,7 +108,6 @@ body {
 
 }
 
-.hero-content-name,
 .hero-content-email,
 .hero-content-password,
 .hero-content-2d-password {
@@ -118,7 +117,6 @@ body {
     margin-top: 2vh;
 }
 
-.hero-content-name-icon,
 .hero-content-email-icon,
 .hero-content-password-icon,
 .hero-content-2d-password-icon {
@@ -127,7 +125,6 @@ body {
     margin-left: 1vw;
 }
 
-.hero-content-name-input,
 .hero-content-email-input,
 .hero-content-password-input,
 .hero-content-2d-password-input {
