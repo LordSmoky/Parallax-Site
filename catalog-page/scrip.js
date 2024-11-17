@@ -1,4 +1,5 @@
 let products = [];
+let brands = [];
 
 // Функция для загрузки продуктов из базы данных
 async function loadProducts() {
@@ -14,13 +15,42 @@ async function loadProducts() {
     }
 }
 
+// Функция для загрузки брендов из базы данных
+async function loadBrands() {
+    try {
+        const response = await fetch('/brands');
+        if (!response.ok) {
+            const errorText = await response.text(); // Получить текст ошибки
+            throw new Error(`Network response was not ok: ${response.status} ${errorText}`);
+        }
+        brands = await response.json();
+        console.log('Загруженные бренды:', brands);
+        populateBrandSelect(); // Заполнить выпадающий список брендов
+    } catch (error) {
+        console.error('Ошибка при загрузке брендов:', error);
+    }
+}
+
+// Функция для заполнения выпадающего списка брендов
+function populateBrandSelect() {
+    const categorySelect = document.getElementById('category');
+    categorySelect.innerHTML = '<option value="all">ALL</option>'; // Сбросить и добавить "Все"
+
+    brands.forEach(brand => {
+        const option = document.createElement('option');
+        option.value = brand.brand; // Используем значение бренда
+        option.textContent = brand.brand; // Отображаемое имя
+        categorySelect.appendChild(option);
+    });
+}
+
 // Функция для отображения продуктов
 function displayProducts(filterCategory = 'all', searchTerm = '') {
     const productList = document.getElementById('product-list');
     productList.innerHTML = '';
 
     const filteredProducts = products.filter(product => {
-        const matchesCategory = filterCategory === 'all' || product.category === filterCategory;
+        const matchesCategory = filterCategory === 'all' || product.brand === filterCategory;
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
         return matchesCategory && matchesSearch;
     });
@@ -46,5 +76,6 @@ document.getElementById('category').addEventListener('change', (event) => {
     displayProducts(category, searchTerm);
 });
 
-// Вызов функции загрузки продуктов при загрузке страницы
+// Вызов функции загрузки продуктов и брендов при загрузке страницы
 loadProducts();
+loadBrands();
