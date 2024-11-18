@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="log-in-page/log-in-style.css">
     <script src="log-in-page/log-in-scrip.js" defer></script>
     <script src="libs/rain.js" defer></script>
+    <script src="parallaxScript.js"></script>
 </head>
 
 <body>
@@ -28,16 +29,17 @@
                         <div class="hero-content">
                             <h1 class="hero-content-reg">Log In</h1>
                             <div class="hero-content__input">
-                                <div class="hero-content-email">
-                                    <input class="hero-content-email-input" type="text" placeholder="Login" required>
-                                    <img src="img/account.svg" alt="A" class="hero-content-email-icon">
-                                </div>
-                                <div class="hero-content-password">
-                                    <input class="hero-content-password-input" type="text" placeholder="Password" required>
-                                    <img src="img/locker.svg" alt="P" class="hero-content-password-icon">
-                                </div>
-                            </div>
-                            <button class="hero-content__button">ENTER</button>
+                                <form id="loginForm">
+                                    <div class="hero-content-email">
+                                        <input class="hero-content-email-input" type="text" placeholder="Login" name="email" required>
+                                        <img src="img/account.svg" alt="A" class="hero-content-email-icon">
+                                    </div>
+                                    <div class="hero-content-password">
+                                        <input class="hero-content-password-input" type="password" placeholder="Password" name="password" required>
+                                        <img src="img/locker.svg" alt="P" class="hero-content-password-icon">
+                                    </div>
+                                    <button type="submit" class="hero-content__button">ENTER</button>
+                                </form>
                             <div class="hero-content__flooter">
                                 <p class="hero-content__p">don't have a account?</p>
                                 <a href="reg.html" class="hero-content__link">REGISTER NOW</a>

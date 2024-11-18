@@ -3,6 +3,7 @@ const { Pool } = require('pg'); // Импортируем Pool из pg
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const path = require('path'); // Импортируем модуль path
+const jwt = require('jsonwebtoken'); // Импортируем jsonwebtoken
 const app = express();
 const port = 8080;
 
@@ -18,6 +19,28 @@ const pool = new Pool({
 // Middleware
 app.use(bodyParser.json());
 app.use(express.static('./')); // Указываем директорию для статических файлов
+
+// Создайте секретный ключ для подписи токенов
+const JWT_SECRET = 'LA01ks92JD83hf'; // Замените на свой секретный ключ
+
+// Обработчик для входа пользователя
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        const user = result.rows[0];
+
+        if (user && await bcrypt.compare(password, user.password)) {
+            // Генерация токена
+            const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1d' });
+            res.json({ token });
+        } else {
+            res.status(401).send('Неверный логин или пароль');
+        }
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
 
 // Обработчик для получения всех продуктов
 app.get('/products', async (req, res) => {
@@ -68,7 +91,7 @@ app.get('/brands', async (req, res) => {
 
 // Обработчики для страниц
 app.get('/catalog', (req, res) => {
-    res.send('Каталог загружен');
+    res.sendFile(path.join(__dirname, 'catalog.html'));
 });
 
 app.get('/reg', (req, res) => {

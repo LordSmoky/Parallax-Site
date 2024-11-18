@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Umbrella</title>
     <link rel="stylesheet" href="code/style.css">
-    <script src="code/scrip.js" defer></script>
+
     <script src="libs/rain.js" defer></script>
+    <script src="parallaxScript.js" defer></script>
 </head>
 
 <body>
@@ -24,9 +25,17 @@
             </div>
             <div class="header__account-container">
                 <img src="img/cart.svg" alt="Cart" class="header__cart-icon">
-                <a href="log-in.html" class="header__account-container-link">
-                    <img src="img/account.svg" alt="Account" class="header__account-icon">
-                </a>
+                <div class="header__account-dropdown">
+                    <div id="account-link" class="header__account-container-link">
+                        <img src="img/account.svg" alt="Account" class="header__account-icon" id="account-icon">
+                        <div class="user-initial" id="user-initial" style="display: none;"></div>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="faq.html">FAQ</a>
+                        <a href="log-in.html" id="login-link" class="login-link">Log in</a>
+                        <a href="#" id="logout-link" class="logout-link" style="display: none;">Log out</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -76,5 +85,5 @@
     </div>
 
 </body>
-
+    <script src="code/scrip.js" defer></script>
 </html>

@@ -74,6 +74,64 @@ body {
     
 }
 
+.header__account-container {
+    display: flex;
+    align-items: center;
+}
+
+.header__account-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.user-initial {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px; /* Ширина кружка */
+    height: 40px; /* Высота кружка */
+    border-radius: 50%; /* Круглая форма */
+    background-color: transparent; /* Цвет фона */
+    color: white; /* Цвет текста */
+    font-weight: bold; /* Жирный шрифт */
+    border: white 3px solid;
+}
+
+.header__account-container-link {
+    display: flex;
+    align-items: center;
+    cursor: pointer; /* Указатель на кликабельный элемент */
+}
+
+.dropdown-content {
+    display: none; /* Скрываем по умолчанию */
+    position: absolute; /* Абсолютное позиционирование для выпадающего меню */
+    top: 100%; /* Позиционируем под иконкой */
+    left: 50%; /* Сдвигаем влево на 50% */
+    transform: translateX(-50%); /* Сдвигаем на 50% влево для центрирования */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для выпадающего меню */
+    z-index: 1; /* Убедитесь, что меню выше других элементов */
+    border-radius: 4px; /* Закругленные углы */
+    border: #ffffff 2px solid;
+}
+
+.dropdown-content a {
+    color: #fff;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #bc0000; /* Цвет при наведении */
+}
+
+/* Показать выпадающий список при наведении */
+.header__account-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
 .header__mobile-format {
     display: flex;
     position: absolute;
