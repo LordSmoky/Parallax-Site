@@ -1,4 +1,3 @@
-// orders-page/scrip.js
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -11,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function loadOrders() {
         try {
-            const response = await fetch('/user-orders', { // Изменено на новый маршрут
+            const response = await fetch('/user-orders', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -37,6 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 orderElement.className = 'order-item';
                 orderElement.innerHTML = `
                     <h2>Заказ ID: ${order.order_id}</h2>
+                    <p>Дата заказа: ${new Date(order.date).toLocaleString()}</p>
                     <p>Общая сумма: ${order.total_price}$</p>
                     <h3>Предметы:</h3>
                     <ul>

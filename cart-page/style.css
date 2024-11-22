@@ -177,6 +177,13 @@ body {
     font-size: 1.2em; /* Увеличиваем размер текста для количества */
 }
 
+.centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
 button {
     background-color: #28a745; /* Зеленый фон для кнопок */
     color: white; /* Белый текст */

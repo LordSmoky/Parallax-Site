@@ -11,7 +11,7 @@ const port = 8080;
 const pool = new Pool({
     user: 'postgres', // Замените на ваше имя пользователя
     host: 'localhost', // Или IP-адрес вашего сервера
-    database: 'Umbrella', // Название вашей базы данных
+    database: 'Umbrella2', // Название вашей базы данных
     password: '123321445', // Замените на ваш пароль
     port: 5432, // Порт по умолчанию для PostgreSQL
 });
@@ -89,32 +89,24 @@ app.post('/logout', (req, res) => {
 });
 
 app.post('/cart/add', authenticateToken, async (req, res) => {
-    const { productId, quantity } = req.body; // Извлекаем productId и quantity из тела запроса
-    const userId = req.user.id; // Получаем userId из токена
-
+    const { productId, quantity } = req.body;
+    const userId = req.user.id;
 
     try {
-        // Проверяем, существует ли пользователь
         const userCheck = await pool.query('SELECT * FROM users WHERE user_id = $1', [userId]);
         if (userCheck.rows.length === 0) {
-            console.error('Пользователь не найден:', userId);
             return res.status(400).send('Пользователь не найден.');
         }
 
-        // Проверяем, существует ли продукт
         const productCheck = await pool.query('SELECT * FROM products WHERE product_id = $1', [productId]);
         if (productCheck.rows.length === 0) {
-            console.error('Продукт не найден:', productId);
             return res.status(400).send('Продукт не найден.');
         }
 
-        // Проверяем, что quantity является положительным целым числом
         if (!Number.isInteger(quantity) || quantity <= 0) {
-            console.error('Некорректное количество:', quantity);
             return res.status(400).send('Количество должно быть положительным целым числом.');
         }
 
-        // Добавляем товар в корзину
         const result = await pool.query(
             `INSERT INTO cart (user_id, product_id, quantity)
              VALUES ($1, $2, $3)
@@ -123,12 +115,12 @@ app.post('/cart/add', authenticateToken, async (req, res) => {
             [userId, productId, quantity]
         );
 
-        res.status(201).json(result.rows[0]); // Возвращаем добавленный товар
+        res.status(201).json(result.rows[0]);
     } catch (error) {
-        console.error('Ошибка при добавлении в корзину:', error); // Логируем ошибку
         res.status(500).send('Ошибка при добавлении товара в корзину.');
     }
 });
+
 
 // Обработчик для получения корзины пользователя
 app.get('/cart', authenticateToken, async (req, res) => {
@@ -148,66 +140,6 @@ app.get('/cart', authenticateToken, async (req, res) => {
     }
 });
 
-
-// Обработчик для добавления товара в корзину
-app.post('/orders', async (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ error: 'Необходима аутентификация' });
-    }
-
-    try {
-        const user = jwt.verify(token, JWT_SECRET);
-        const userId = user.id;
-
-        const cartResponse = await pool.query('SELECT * FROM cart WHERE user_id = $1', [userId]);
-        const cartItems = cartResponse.rows;
-
-        if (cartItems.length === 0) {
-            return res.status(400).json({ error: 'Корзина пуста' });
-        }
-
-        const orderResponse = await pool.query(
-            'INSERT INTO orders (user_id, cart_id) VALUES ($1, $2) RETURNING order_id',
-            [userId, cartItems[0].cart_id] // Предполагается, что у вас только один cart_id
-        );
-
-        const orderId = orderResponse.rows[0].order_id;
-        res.status(201).json({ orderId });
-    } catch (error) {
-        console.error('Ошибка при оформлении заказа:', error.message); // Логируем сообщение об ошибке
-        console.error(error); // Логируем полную ошибку для анализа
-        res.status(500).json({ error: 'Ошибка сервера' });
-    }
-
-    async function updateCartId(newCartId) {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    try {
-        const response = await fetch('/cart/update', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ cart_id: newCartId })
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Ошибка при обновлении cart_id: ${errorText}`);
-        }
-
-        // Обновление интерфейса после успешного изменения cart_id
-        alert(`Корзина обновлена. Новый cart_id: ${newCartId}`);
-        await loadCart(); // Перезагрузить корзину для обновления интерфейса
-    } catch (error) {
-        console.error('Ошибка:', error);
-        alert('Не удалось обновить cart_id. Пожалуйста, попробуйте позже.');
-    }
-}
-});
 
 app.post('/cart/update', authenticateToken, async (req, res) => {
     const { productId, change } = req.body;
@@ -241,46 +173,12 @@ app.post('/cart/update', authenticateToken, async (req, res) => {
             );
         }
 
-
         res.sendStatus(204); // Успешное обновление без содержимого
     } catch (err) {
         res.status(500).send(err.message);
     }
-
 });
 
-// Обработчик для очистки корзины
-app.post('/cart/clear', authenticateToken, async (req, res) => {
-    const userId = req.user.id;
-
-    try {
-        await pool.query(`DELETE FROM cart WHERE user_id = $1`, [userId]);
-        res.sendStatus(204); // Успешно очищено
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
-
-// Обработчик для увеличения cart_id
-app.post('/cart/increment-id', authenticateToken, async (req, res) => {
-    const userId = req.user.id;
-
-    try {
-        const result = await pool.query(
-            `UPDATE carts SET cart_id = cart_id + 1 WHERE user_id = $1 RETURNING cart_id`,
-            [userId]
-        );
-
-        if (result.rows.length === 0) {
-            return res.status(404).send('Корзина не найдена.');
-        }
-
-        const newCartId = result.rows[0].cart_id;
-        res.json({ newCartId });
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
 
 // Регистрация пользователя
 app.post('/users/add', async (req, res) => {
@@ -314,70 +212,26 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Обработчик для оформления заказа
-app.post('/orders/add', authenticateToken, async (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ error: 'Необходима аутентификация' });
-    }
-
-    try {
-        const user = jwt.verify(token, JWT_SECRET);
-        const userId = user.id;
-
-        const cartResponse = await pool.query('SELECT * FROM cart WHERE user_id = $1', [userId]);
-        const cartItems = cartResponse.rows;
-
-        if (cartItems.length === 0) {
-            return res.status(400).json({ error: 'Корзина пуста' });
-        }
-
-        const orderResponse = await pool.query(
-            'INSERT INTO orders (user_id, cart_id) VALUES ($1, $2) RETURNING order_id',
-            [userId, cartItems[0].cart_id] // Предполагается, что у вас только один cart_id
-        );
-
-        const orderId = orderResponse.rows[0].order_id;
-        res.status(201).json({ orderId });
-    } catch (error) {
-        console.error('Ошибка при оформлении заказа:', error.message); // Логируем сообщение об ошибке
-        console.error(error); // Логируем полную ошибку для анализа
-        res.status(500).json({ error: 'Ошибка сервера' });
-    }
-});
 
 app.get('/user-orders', authenticateToken, async (req, res) => {
     const userId = req.user.id; // Получаем userId из токена
     try {
         const result = await pool.query(`
             SELECT o.order_id, 
-                   SUM(p.price * c.quantity) AS total_price,
-                   ARRAY_AGG(json_build_object('product_id', p.product_id, 'name', p.name, 'quantity', c.quantity)) AS items
+                   o.date,
+                   SUM(oi.quantity * p.price) AS total_price,
+                   ARRAY_AGG(json_build_object('product_id', p.product_id, 'name', p.name, 'quantity', oi.quantity)) AS items
             FROM orders o
-            JOIN cart c ON o.cart_id = c.cart_id
-            JOIN products p ON c.product_id = p.product_id
+            JOIN order_items oi ON o.order_id = oi.order_id
+            JOIN products p ON oi.product_id = p.product_id
             WHERE o.user_id = $1
             GROUP BY o.order_id
-            ORDER BY o.order_id DESC
+            ORDER BY o.date DESC
         `, [userId]);
 
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Ошибка при получении заказов:', err); // Логируем ошибку
-        res.status(500).send(err.message);
-    }
-});
-
-app.post('/orders/add', authenticateToken, async (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ error: 'Необходима аутентификация' });
-    }
-
+;app.post('/orders', authenticateToken, async (req, res) => {
     try {
-        const user = jwt.verify(token, JWT_SECRET);
-        const userId = user.id;
-
+        const userId = req.user.id; // Используем id пользователя из токена
         const cartResponse = await pool.query('SELECT * FROM cart WHERE user_id = $1', [userId]);
         const cartItems = cartResponse.rows;
 
@@ -385,16 +239,9 @@ app.post('/orders/add', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Корзина пуста' });
         }
 
-        // Предполагается, что cart_id должен быть получен из cart
-        const cartId = cartItems[0].cart_id; // Убедитесь, что cart_id существует
-
-        if (!cartId) {
-            return res.status(400).json({ error: 'Не удалось получить cart_id' });
-        }
-
         const orderResponse = await pool.query(
             'INSERT INTO orders (user_id, cart_id) VALUES ($1, $2) RETURNING order_id',
-            [userId, cartId]
+            [userId, cartItems[0].cart_id]
         );
 
         const orderId = orderResponse.rows[0].order_id;
@@ -402,6 +249,74 @@ app.post('/orders/add', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('Ошибка при оформлении заказа:', error.message);
         res.status(500).json({ error: 'Ошибка сервера' });
+    }
+});
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Ошибка при получении заказов:', err);
+        res.status(500).send(err.message);
+    }
+});
+
+
+app.post('/orders/add', authenticateToken, async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        // Получаем элементы корзины для пользователя
+        const cartResponse = await pool.query('SELECT * FROM cart WHERE user_id = $1', [userId]);
+        const cartItems = cartResponse.rows;
+
+        if (cartItems.length === 0) {
+            return res.status(400).json({ error: 'Корзина пуста' });
+        }
+
+        // Создаем новый заказ и возвращаем его ID
+        const orderResponse = await pool.query(
+            'INSERT INTO orders (user_id, date) VALUES ($1, NOW()) RETURNING order_id',
+            [userId]
+        );
+
+        const orderId = orderResponse.rows[0].order_id; // Извлекаем ID заказа
+
+        // Вставляем элементы заказа
+        for (const item of cartItems) {
+            await pool.query(
+                'INSERT INTO order_items (order_id, product_id, quantity) VALUES ($1, $2, $3)',
+                [orderId, item.product_id, item.quantity]
+            );
+        }
+
+        // Очищаем корзину после оформления заказа
+        await pool.query('DELETE FROM cart WHERE user_id = $1', [userId]);
+
+        res.status(201).json({ orderId }); // Возвращаем ID заказа
+    } catch (error) {
+        console.error('Ошибка при оформлении заказа:', error.message); // Логируем сообщение об ошибке
+        res.status(500).json({ error: 'Ошибка сервера' });
+    }
+});
+
+
+app.post('/cart/remove', authenticateToken, async (req, res) => {
+    const { productId } = req.body;
+    const userId = req.user.id;
+
+    try {
+        // Удаляем товар из корзины
+        const result = await pool.query(
+            `DELETE FROM cart WHERE user_id = $1 AND product_id = $2`,
+            [userId, productId]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).send('Товар не найден в корзине.');
+        }
+
+        res.sendStatus(204); // Успешное удаление без содержимого
+    } catch (err) {
+        console.error('Ошибка при удалении товара:', err);
+        res.status(500).send('Ошибка сервера');
     }
 });
 

@@ -32,7 +32,7 @@ function populateBrandSelect() {
 
     brands.forEach(brand => {
         const option = document.createElement('option');
-        option.value = brand.brand;
+        option.value = brand.brand; // Убедитесь, что это соответствует вашему полю в базе данных
         option.textContent = brand.brand;
         categorySelect.appendChild(option);
     });
@@ -81,7 +81,7 @@ async function addToCart(product, quantity) {
     }
 
     const cartItem = {
-        productId: product.product_id,
+        productId: product.product_id, // Убедитесь, что это соответствует вашему полю в базе данных
         quantity: quantity
     };
 

@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const productList = document.getElementById('product-list');
-    const totalAmountElement = document.getElementById('total-amount');
 
     const token = localStorage.getItem('token');
 
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('logout-link').addEventListener('click', async () => {
         localStorage.removeItem('token'); // Удаляем токен
         alert('Вы вышли из системы. Пожалуйста, войдите снова.'); 
-        totalAmountElement.textContent = '0$'; // Обнуляем общую сумму
         await fetch('/logout', { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }}); 
         window.location.href = 'log-in.html'; // Перенаправляем на страницу входа
     });
@@ -42,58 +40,74 @@ async function loadCart() {
 
     const cartItems = await response.json();
     const productList = document.getElementById('product-list');
-    const totalAmountElement = document.getElementById('total-amount');
+    const totalPriceElement = document.getElementById('total-price');
+    const orderButton = document.getElementById('order-button');
 
     productList.innerHTML = ''; // Очистить список перед добавлением новых элементов
+    let totalPrice = 0;
 
     if (cartItems.length === 0) {
         productList.innerHTML = '<p>Корзина пуста.</p>';
-        totalAmountElement.textContent = '$0'; // Обнуляем общую сумму
+        totalPriceElement.textContent = 'Общая сумма: 0';
+        orderButton.style.display = 'none'; // Скрыть кнопку, если корзина пуста
         return;
     }
 
-    let totalAmount = 0;
-
     cartItems.forEach(item => {
-        const productDiv = document.createElement('div');
-        productDiv.classList.add('cart-product');
-        productDiv.dataset.id = item.product_id;
-        productDiv.dataset.price = item.price;
+        if (item.quantity > 0) {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('cart-product');
+            productDiv.dataset.id = item.product_id;
+            productDiv.dataset.price = item.price;
 
-        productDiv.innerHTML = `
-            <h2 class="product-name">${item.name}</h2>
-            <div class="product-price">Цена: ${item.price}</div>
-            <div class="quantity-controls">
-                <button class="quantity-button decrease">-</button>
-                <div class="quantity">${item.quantity}</div>
-                <button class="quantity-button increase">+</button>
-            </div>
-        `;
-        productList.appendChild(productDiv);
-        totalAmount += item.price * item.quantity;
+            productDiv.innerHTML = `
+                <h2 class="product-name">${item.name}</h2>
+                <div class="product-price">Цена: ${item.price}</div>
+                <div class="quantity-controls">
+                    <button class="quantity-button decrease">-</button>
+                    <div class="quantity">${item.quantity}</div>
+                    <button class="quantity-button increase">+</button>
+                </div>
+            `;
+            productList.appendChild(productDiv);
 
-        // Добавляем обработчики событий для изменения количества
-        const decreaseButton = productDiv.querySelector('.decrease');
-        const increaseButton = productDiv.querySelector('.increase');
+            const decreaseButton = productDiv.querySelector('.decrease');
+            const increaseButton = productDiv.querySelector('.increase');
 
-        decreaseButton.addEventListener('click', () => {
-            updateQuantity(item.product_id, -1);
-        });
+            decreaseButton.addEventListener('click', async () => {
+                if (item.quantity === 1) {
+                    await removeFromCart(item.product_id);
+                } else {
+                    await updateQuantity(item.product_id, -1);
+                }
+            });
 
-        increaseButton.addEventListener('click', () => {
-            updateQuantity(item.product_id, 1);
-        });
+            increaseButton.addEventListener('click', () => {
+                updateQuantity(item.product_id, 1);
+            });
+
+            totalPrice += item.price * item.quantity;
+        }
     });
 
-    totalAmountElement.textContent = `${totalAmount.toFixed(2)}$`;
+    totalPriceElement.textContent = `Общая сумма: ${totalPrice.toFixed(2)}`;
+    orderButton.style.display = 'block'; // Показать кнопку, если корзина не пуста
+
+    // Обработчик события для общей кнопки "Заказать"
+    orderButton.addEventListener('click', async () => {
+            await placeOrder();
+      
+    });
+
+    orderButton.addEventListener('click', async () => {
+        window.location.reload(); 
+    });
+   
 }
 
 async function updateQuantity(productId, change) {
     const token = localStorage.getItem('token');
-    if (!token) {
-        alert('Пожалуйста, войдите в систему, чтобы изменить количество товаров в корзине.');
-        return;
-    }
+    if (!token) return;
 
     try {
         const response = await fetch('/cart/update', {
@@ -110,47 +124,46 @@ async function updateQuantity(productId, change) {
             throw new Error(`Ошибка при обновлении количества: ${errorText}`);
         }
 
-        // Обновляем корзину после изменения количества
-        await loadCart();
+        // Обновление интерфейса после успешного изменения количества
+        await loadCart(); // Перезагрузить корзину для обновления интерфейса
     } catch (error) {
         console.error('Ошибка:', error);
+        alert('Не удалось обновить количество. Пожалуйста, попробуйте позже.');
     }
 }
 
-function updateAccountLink() {
+// Функция для удаления товара из корзины
+async function removeFromCart(productId) {
     const token = localStorage.getItem('token');
-    const accountIcon = document.getElementById('account-icon');
-    const userInitial = document.getElementById('user-initial');
-    const loginLink = document.getElementById('login-link');
-    const logoutLink = document.getElementById('logout-link');
+    if (!token) return;
 
-    if (token) {
-        const user = JSON.parse(atob(token.split('.')[1])); // Декодируем токен
-        const firstNameLetter = user.email.charAt(0).toUpperCase(); // Первая буква email (или имени)
-        userInitial.textContent = firstNameLetter; // Устанавливаем букву в кружок
-        
-        // Скрыть иконку и показать кружок
-        accountIcon.style.display = 'none';
-        userInitial.style.display = 'flex'; // Показать кружок
-        loginLink.style.display = 'none'; // Скрыть ссылку на вход
-        logoutLink.style.display = 'block'; // Показать ссылку на выход
+    try {
+        const response = await fetch('/cart/remove', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ productId })
+        });
 
-        // Обработчик для выхода
-        logoutLink.onclick = function() {
-            localStorage.removeItem('token'); // Удалить токен
-            updateAccountLink(); // Обновить интерфейс
-        };
-    } else {
-        // Показать иконку и скрыть кружок
-        userInitial.style.display = 'none'; // Скрыть кружок
-        accountIcon.style.display = 'block'; // Показать иконку
-        loginLink.style.display = 'block'; // Показать ссылку на вход
-        logoutLink.style.display = 'none'; // Скрыть ссылку на выход
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Ошибка при удалении товара: ${errorText}`);
+        }
+
+        // Обновление интерфейса после успешного удаления
+        alert('Товар удален из корзины.');
+        await loadCart(); // Перезагрузить корзину для обновления интерфейса
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Не удалось удалить товар. Пожалуйста, попробуйте позже.');
     }
 }
+
 
 // Встраиваем функцию checkout
-async function checkout() {
+async function checkout(productId, quantity) {
     const token = localStorage.getItem('token');
     if (!token) {
         alert('Пожалуйста, войдите в систему для оформления заказа.');
@@ -158,31 +171,54 @@ async function checkout() {
     }
 
     try {
-        const response = await fetch('/checkout', {
+        const response = await fetch('/orders/add', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({ product_id: productId, quantity }) // Изменяем на product_id
         });
 
         if (!response.ok) {
-            throw new Error('Ошибка при оформлении заказа.');
+            const errorText = await response.text();
+            throw new Error(`Ошибка при оформлении заказа: ${errorText}`);
         }
 
         const result = await response.json();
-        alert(`Заказ оформлен! ID заказа: ${result.orderId}, новая корзина ID: ${result.newCartId}`);
+        alert(`Заказ оформлен! ID заказа: ${result.order_id}`); // Изменяем на order_id
+        await loadCart(); // Обновляем корзину после оформления заказа
     } catch (error) {
         console.error('Ошибка:', error);
         alert('Не удалось оформить заказ. Пожалуйста, попробуйте позже.');
     }
 }
 
-// Обработчик события для кнопки оформления заказа
-document.getElementById('checkout-button').addEventListener('click', async () => {
-    await checkout(); // Вызов функции оформления заказа
-});
+async function placeOrder() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const response = await fetch('/orders/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Ошибка при оформлении заказа: ${errorText}`);
+        }
+
+        const data = await response.json();
+        alert(`Заказ оформлен! ID заказа: ${data.orderId}`); // Убедитесь, что вы используете правильное имя поля
+    } catch (error) {
+        console.error('Ошибка:', error);
+    }
+}
+
 
 // Вызов функции для первоначальной инициализации
 updateAccountLink();
-
