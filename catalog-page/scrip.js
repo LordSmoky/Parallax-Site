@@ -5,9 +5,7 @@ let brands = [];
 async function loadProducts() {
     try {
         const response = await fetch('/products');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        if (!response.ok) throw new Error('Ошибка сети при загрузке продуктов');
         products = await response.json();
         displayProducts(); // Отобразить загруженные продукты
     } catch (error) {
@@ -19,12 +17,8 @@ async function loadProducts() {
 async function loadBrands() {
     try {
         const response = await fetch('/brands');
-        if (!response.ok) {
-            const errorText = await response.text(); // Получить текст ошибки
-            throw new Error(`Network response was not ok: ${response.status} ${errorText}`);
-        }
+        if (!response.ok) throw new Error('Ошибка сети при загрузке брендов');
         brands = await response.json();
-        console.log('Загруженные бренды:', brands);
         populateBrandSelect(); // Заполнить выпадающий список брендов
     } catch (error) {
         console.error('Ошибка при загрузке брендов:', error);
@@ -34,12 +28,12 @@ async function loadBrands() {
 // Функция для заполнения выпадающего списка брендов
 function populateBrandSelect() {
     const categorySelect = document.getElementById('category');
-    categorySelect.innerHTML = '<option value="all">ALL</option>'; // Сбросить и добавить "Все"
+    categorySelect.innerHTML = '<option value="all">Все</option>'; // Сбросить и добавить "Все"
 
     brands.forEach(brand => {
         const option = document.createElement('option');
-        option.value = brand.brand; // Используем значение бренда
-        option.textContent = brand.brand; // Отображаемое имя
+        option.value = brand.brand;
+        option.textContent = brand.brand;
         categorySelect.appendChild(option);
     });
 }
@@ -55,12 +49,61 @@ function displayProducts(filterCategory = 'all', searchTerm = '') {
         return matchesCategory && matchesSearch;
     });
 
-    filteredProducts.forEach(product => {
-        const productDiv = document.createElement('div');
-        productDiv.className = 'product';
-        productDiv.innerHTML = `<h2>${product.name}</h2><p>Бренд: ${product.brand}</p><p>Цена: ${product.price}</p>`;
-        productList.appendChild(productDiv);
-    });
+    if (filteredProducts.length === 0) {
+        productList.innerHTML = '<p>Нет доступных продуктов.</p>';
+    } else {
+        filteredProducts.forEach(product => {
+            const productDiv = document.createElement('div');
+            productDiv.className = 'product';
+            productDiv.innerHTML = `
+                <h2>${product.name}</h2>
+                <p>Бренд: ${product.brand}</p>
+                <p>Цена: $<span class="product-price">${product.price}</span></p>
+                <button class="add-to-cart-button">Добавить в корзину</button>
+            `;
+            
+            // Добавляем обработчик события для кнопки "Добавить в корзину"
+            productDiv.querySelector('.add-to-cart-button').addEventListener('click', () => {
+                addToCart(product, 1);
+            });
+
+            productList.appendChild(productDiv);
+        });
+    }
+}
+
+// Функция для добавления товара в корзину
+async function addToCart(product, quantity) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Пожалуйста, войдите в систему, чтобы добавить товары в корзину.');
+        return;
+    }
+
+    const cartItem = {
+        productId: product.product_id,
+        quantity: quantity
+    };
+
+    try {
+        const response = await fetch('/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(cartItem)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Ошибка при добавлении товара в корзину: ${errorText}`);
+        }
+
+        alert(`${product.name} добавлен в корзину!`);
+    } catch (error) {
+        console.error('Ошибка:', error);
+    }
 }
 
 // Обработчики событий для поиска и фильтрации
@@ -80,11 +123,7 @@ document.getElementById('category').addEventListener('change', (event) => {
 loadProducts();
 loadBrands();
 
-
-
-
-
-
+// Обновление информации о пользователе
 function updateAccountLink() {
     const token = localStorage.getItem('token');
     const accountIcon = document.getElementById('account-icon');
@@ -94,22 +133,17 @@ function updateAccountLink() {
 
     if (token) {
         const user = JSON.parse(atob(token.split('.')[1])); // Декодируем токен
-        const firstNameLetter = user.email.charAt(0).toUpperCase(); // Первая буква email (или имени)
-        userInitial.textContent = firstNameLetter; // Устанавливаем букву в кружок
-        
-        // Скрыть иконку и показать кружок
+        userInitial.textContent = user.email.charAt(0).toUpperCase(); // Первая буква email
         accountIcon.style.display = 'none';
         userInitial.style.display = 'flex'; // Показать кружок
         loginLink.style.display = 'none'; // Скрыть ссылку на вход
         logoutLink.style.display = 'block'; // Показать ссылку на выход
 
-        // Обработчик для выхода
-        logoutLink.onclick = function() {
-            localStorage.removeItem('token'); // Удалить токен
+        logoutLink.onclick = () => {
+            localStorage.removeItem('token');
             updateAccountLink(); // Обновить интерфейс
         };
     } else {
-        // Показать иконку и скрыть кружок
         userInitial.style.display = 'none'; // Скрыть кружок
         accountIcon.style.display = 'block'; // Показать иконку
         loginLink.style.display = 'block'; // Показать ссылку на вход
@@ -119,15 +153,3 @@ function updateAccountLink() {
 
 // Вызов функции для первоначальной инициализации
 updateAccountLink();
-
-
-
-// на страницу cart
-// window.addEventListener('load', () => {
-//     const token = localStorage.getItem('token');
-//     if (!token) {
-//         // Если токена нет, перенаправьте на страницу входа
-//         window.location.href = 'log-in.html';
-//     }
-//     // Здесь можно добавить дополнительную логику, например, декодирование токена
-// }); 

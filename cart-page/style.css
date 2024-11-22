@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Edu+AU+VIC+WA+NT+Dots:wght@400..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: transparent;
+    width: 100vw;
+    height: 10vh;
+    position: absolute;
+    z-index: 1;
+    margin-top: 0.5vh;
+}
+.invisiableBlock{
+    height: 35px;
+    width: 35px;
+}
+
+.mini-logo {
+    width: 40px;
+    height: 40px;
+}
+
+.header__account-container {
+    display: flex;
+    max-height: 35px;
+    width: 120px;
+    justify-content: space-between;
+}
+
+.product-list {
+    display: flex;
+    flex-direction: column; /* Изменено на колонку */
+    flex-wrap: wrap;
+    margin: 20px 0;    
+}
+
+.product {
+    border: 2px solid #1f0000;
+    border-radius: 5px;
+    margin: 10px 0; /* Увеличен отступ сверху и снизу */
+    padding: 10px;
+    width: 100%; /* Ширина на 100% */
+    background-color: #000;
+    overflow: auto;
+}
+
+.product h2, .product p {
+    margin: 5px 0;
+}
+
+.total-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.total {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.checkout-button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.checkout-button:hover {
+    background-color: #218838;
+}
+
+@media (max-width: 768px) {
+    .header__pc-format {
+        display: none;
+    }
+    
+    .header__mobile-format {
+        display: block;
+    }
+}
+
+@media (min-width: 768px) {
+    .header__pc-format {
+        display: block;
+    }
+    
+    .header__mobile-format {
+        display: none;
+    }
+}
+
+
+.container {
+    position: absolute;
+    top: 50%; right: 50%;
+    transform: translate(50%,-50%);
+    max-width: 90vw;
+    min-width: 70vw;
+    height: 70vh;
+    padding: 20px;
+    border-radius: 2rem;
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    z-index: 1;
+    align-items: center;
+    overflow: auto;
+}
+
+.cart-title {
+    font-size: 2em; /* Размер заголовка */
+    margin-bottom: 20px; /* Отступ снизу для заголовка */
+    text-align: center; /* Центрирование текста */
+}
+
+.product-list {
+    display: flex;
+    flex-direction: column; /* Вертикальное выравнивание */
+    gap: 10px; /* Отступы между товарами */
+}
+
+.cart-product {
+    display: flex; /* Использование flex для выравнивания элементов в строку */
+    justify-content: space-between; /* Распределяет элементы по краям */
+    align-items: center; /* Центрирует элементы по вертикали */
+    padding: 10px; /* Внутренние отступы для товара */
+    border: 3px solid #000000; /* Легкая граница для отделения товаров */
+    border-radius: 5px; /* Скругленные углы */
+    background-color: #ffffff; /* Светлый фон для товаров */
+    transition: background-color 0.3s; /* Плавный переход при наведении */
+    gap: 10px;
+    color: #000;
+    font-weight: bold;
+}
+
+.cart-product:hover {
+    background-color: #eaeaea; /* Изменение фона при наведении */
+}
+
+.cart-product h2 {
+    margin: 0; /* Убираем отступы у заголовка товара */
+    font-size: 1.2em; /* Увеличиваем размер текста */
+    color: #191919; /* Темный цвет текста */
+    flex: 1; /* Позволяет заголовку занимать оставшееся пространство */
+}
+
+.product-price {
+    font-weight: bold; /* Жирный шрифт для цены */
+    color: #28a745; /* Зеленый цвет для цены */
+    margin-right: 20px; /* Отступ справа для цены */
+}
+
+.quantity-controls {
+    display: flex; /* Используем flex для выравнивания кнопок и количества */
+    align-items: center; /* Центрируем элементы по вертикали */
+}
+
+.quantity {
+    margin: 0 10px; /* Отступы по бокам для количества */
+    font-size: 1.2em; /* Увеличиваем размер текста для количества */
+}
+
+button {
+    background-color: #28a745; /* Зеленый фон для кнопок */
+    color: white; /* Белый текст */
+    border: none; /* Убираем рамку */
+    border-radius: 5px; /* Скругленные углы */
+    padding: 5px 10px; /* Отступы внутри кнопки */
+    cursor: pointer; /* Курсор в виде указателя */
+    font-size: 1em; /* Размер шрифта */
+}
+
+button:hover {
+    background-color: #218838; /* Темнее при наведении */
+}
+
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #32161b;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(121, 0, 0);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(140, 0, 255);
+}

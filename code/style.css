@@ -88,30 +88,30 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 40px; /* Ширина кружка */
-    height: 40px; /* Высота кружка */
-    border-radius: 50%; /* Круглая форма */
-    background-color: transparent; /* Цвет фона */
-    color: white; /* Цвет текста */
-    font-weight: bold; /* Жирный шрифт */
+    width: 40px;
+    height: 40px; 
+    border-radius: 50%; 
+    background-color: transparent;
+    color: white; 
+    font-weight: bold; 
     border: white 3px solid;
 }
 
 .header__account-container-link {
     display: flex;
     align-items: center;
-    cursor: pointer; /* Указатель на кликабельный элемент */
+    cursor: pointer; 
 }
 
 .dropdown-content {
-    display: none; /* Скрываем по умолчанию */
-    position: absolute; /* Абсолютное позиционирование для выпадающего меню */
-    top: 100%; /* Позиционируем под иконкой */
-    left: 50%; /* Сдвигаем влево на 50% */
-    transform: translateX(-50%); /* Сдвигаем на 50% влево для центрирования */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для выпадающего меню */
-    z-index: 1; /* Убедитесь, что меню выше других элементов */
-    border-radius: 4px; /* Закругленные углы */
+    display: none; 
+    position: absolute; 
+    top: 100%; 
+    left: 50%;
+    transform: translateX(-50%); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    z-index: 1; 
+    border-radius: 4px;
     border: #ffffff 2px solid;
 }
 
@@ -123,10 +123,9 @@ body {
 }
 
 .dropdown-content a:hover {
-    background-color: #bc0000; /* Цвет при наведении */
+    background-color: #bc0000; 
 }
 
-/* Показать выпадающий список при наведении */
 .header__account-dropdown:hover .dropdown-content {
     display: block;
 }
@@ -162,7 +161,7 @@ body {
 }
 
 .nav {
-    display: none; /* Hide the menu by default */
+    display: none;
     background-color: #342e30;
     position: absolute;
     top: 50px;
@@ -191,7 +190,7 @@ body {
 }
 
 .nav.active {
-    display: block; /* Show the menu when active */
+    display: block; 
 }
 
 .license{

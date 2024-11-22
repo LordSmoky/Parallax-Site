@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Umbrella</title>
-    <link rel="stylesheet" href="catalog-page/style.css">
-    <script src="libs/rain.js"></script>
+    <title>Мои Заказы - Umbrella</title>
+    <link rel="stylesheet" href="code/style.css">
+    <link rel="stylesheet" href="cart-page/style.css">
     <script src="parallaxScript.js"></script>
+    <script src="libs/rain.js" defer></script>
 </head>
-
 <body>
-    
     <div class="header__pc-format">
         <div class="header">
             <div class="header__logo-container">
@@ -19,19 +17,9 @@
                     <img src="img/mini-logo.svg" alt="umbrl" class="mini-logo">
                 </a>
             </div>
-            <div class="header__search-catalog">
-                <div class="filters">
-                    <label for="category"></label>
-                    <select id="category">
-                    </select>
-                </div>
-                <input class="header__search-input" id="search" type="text" placeholder="Search...">
-                <img src="img/searchIcon.svg" alt="Search Icon" class="header__search-icon">
-            </div>
+            <div class="header__search-catalog"> </div>
             <div class="header__account-container">
-                <a href="cart.html"> 
-                    <img src="img/cart.svg" alt="Cart" class="header__cart-icon">
-                </a>
+                <div class="invisiableBlock"></div>
                 <div class="header__account-dropdown">
                     <div id="account-link" class="header__account-container-link">
                         <img src="img/account.svg" alt="Account" class="header__account-icon" id="account-icon">
@@ -47,19 +35,6 @@
             </div>
         </div>
     </div>
-    <div class="header__mobile-format">
-        <div class="header__menu__button-container">
-            <button class="header__menu__button" id="humburger">
-                <img src="img/home.svg" alt="Menu" class="header__menu__button-icon">
-            </button>
-        </div> 
-        <div class="header__account-m-container">
-            <a href="log-in.html" class="header__account-link">
-                <img src="img/account.svg" alt="Account" class="header__account-m-icon">
-            </a>
-        </div>
-    </div>
-
 
     <div class="content">
         <section class="layers">
@@ -68,22 +43,22 @@
                 <div class="layers__item layer-2" style="background-image: url(img/layer-2.png);"></div>
                 <canvas class="rain"></canvas>
                 <div class="layers__item layer-3" style="background-image: url(img/layer-3.png);"></div>
-                <div class="layers__item layer-4">
-                </div>
+                <div class="layers__item layer-4"></div>
                 <div class="layers__item layer-5">
                     <canvas class="rain"></canvas>
                 </div>
             </div>
         </section>
     </div>
-    
+
     <div class="container">
-        <div id="product-list" class="product-list">
-            
+        <h1 class="cart-title">My orders</h1>
+        <div id="order-list" class="product-list">
+            <!-- Здесь будут добавлены заказы пользователя -->
         </div>
     </div>
 
-    <script src="catalog-page/scrip.js" defer></script>
     <script src="code/scrip.js"></script>
+    <script src="orders-page/scrip.js" defer></script>
 </body>
 </html>

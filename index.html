@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Umbrella</title>
     <link rel="stylesheet" href="code/style.css">
-
     <script src="libs/rain.js" defer></script>
     <script src="parallaxScript.js" defer></script>
 </head>
@@ -24,7 +23,9 @@
                 <img src="img/nyancat.webp" alt="UmbrellaShop" class="header__search-catalog__img">
             </div>
             <div class="header__account-container">
-                <img src="img/cart.svg" alt="Cart" class="header__cart-icon">
+                <a href="cart.html"> 
+                    <img src="img/cart.svg" alt="Cart" class="header__cart-icon">
+                </a>
                 <div class="header__account-dropdown">
                     <div id="account-link" class="header__account-container-link">
                         <img src="img/account.svg" alt="Account" class="header__account-icon" id="account-icon">
@@ -32,6 +33,7 @@
                     </div>
                     <div class="dropdown-content">
                         <a href="faq.html">FAQ</a>
+                        <a href="orders.html" id="my-orders-link" class="my-orders-link" style="display: none;">My Orders</a>
                         <a href="log-in.html" id="login-link" class="login-link">Log in</a>
                         <a href="#" id="logout-link" class="logout-link" style="display: none;">Log out</a>
                     </div>

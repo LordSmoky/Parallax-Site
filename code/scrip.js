@@ -4,6 +4,7 @@ function updateAccountLink() {
     const userInitial = document.getElementById('user-initial');
     const loginLink = document.getElementById('login-link');
     const logoutLink = document.getElementById('logout-link');
+    const myOrdersLink = document.getElementById('my-orders-link');
 
     if (token) {
         const user = JSON.parse(atob(token.split('.')[1])); // Декодируем токен
@@ -15,6 +16,7 @@ function updateAccountLink() {
         userInitial.style.display = 'flex'; // Показать кружок
         loginLink.style.display = 'none'; // Скрыть ссылку на вход
         logoutLink.style.display = 'block'; // Показать ссылку на выход
+        myOrdersLink.style.display = 'block';
 
         // Обработчик для выхода
         logoutLink.onclick = function() {
@@ -27,6 +29,7 @@ function updateAccountLink() {
         accountIcon.style.display = 'block'; // Показать иконку
         loginLink.style.display = 'block'; // Показать ссылку на вход
         logoutLink.style.display = 'none'; // Скрыть ссылку на выход
+        myOrdersLink.style.display = 'none';
     }
 }
 
