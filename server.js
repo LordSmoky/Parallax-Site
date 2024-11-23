@@ -38,8 +38,8 @@ function authenticateToken(req, res, next) {
 // Обработчик для получения всех продуктов
 app.get('/products', async (req, res) => {
     try {
-        const result = await pool.query('SELECT product_id, name, brand, price, quantity FROM products');
-        res.json(result.rows); // Используем result.rows для PostgreSQL
+        const result = await pool.query('SELECT product_id, name, brand, price, quantity, image FROM products');
+        res.json(result.rows);
     } catch (err) {
         res.status(500).send(err.message);
     }
@@ -284,6 +284,14 @@ app.post('/orders/add', authenticateToken, async (req, res) => {
             await pool.query(
                 'INSERT INTO order_items (order_id, product_id, quantity) VALUES ($1, $2, $3)',
                 [orderId, item.product_id, item.quantity]
+            );
+        }
+
+        // Уменьшение количества товара
+        for (const item of cartItems) {
+            await pool.query(
+                'UPDATE products SET quantity = quantity - $1 WHERE product_id = $2',
+                [item.quantity, item.product_id]
             );
         }
 

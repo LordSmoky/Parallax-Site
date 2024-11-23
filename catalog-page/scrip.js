@@ -56,6 +56,7 @@ function displayProducts(filterCategory = 'all', searchTerm = '') {
             const productDiv = document.createElement('div');
             productDiv.className = 'product';
             productDiv.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" class="product-image" />
                 <h2>${product.name}</h2>
                 <p>Бренд: ${product.brand}</p>
                 <p>Цена: $<span class="product-price">${product.price}</span></p>
