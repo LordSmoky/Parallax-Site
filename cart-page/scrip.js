@@ -48,7 +48,7 @@ async function loadCart() {
 
     if (cartItems.length === 0) {
         productList.innerHTML = '<p>Корзина пуста.</p>';
-        totalPriceElement.textContent = 'Общая сумма: 0';
+        totalPriceElement.textContent = 'Общая сумма: 0 BYN';
         orderButton.style.display = 'none'; // Скрыть кнопку, если корзина пуста
         return;
     }
@@ -62,7 +62,7 @@ async function loadCart() {
 
             productDiv.innerHTML = `
                 <h2 class="product-name">${item.name}</h2>
-                <div class="product-price">Цена: ${item.price}</div>
+                <div class="product-price">Цена: ${item.price} BYN</div>
                 <div class="quantity-controls">
                     <button class="quantity-button decrease">-</button>
                     <div class="quantity">${item.quantity}</div>
@@ -90,7 +90,7 @@ async function loadCart() {
         }
     });
 
-    totalPriceElement.textContent = `Общая сумма: ${totalPrice.toFixed(2)}`;
+    totalPriceElement.textContent = `Общая сумма: ${totalPrice.toFixed(2)} BYN`;
     orderButton.style.display = 'block'; // Показать кнопку, если корзина не пуста
 
     // Обработчик события для общей кнопки "Заказать"

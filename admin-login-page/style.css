@@ -1,0 +1,39 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#admin-username, #admin-password{
+    padding: 10px;
+    border: #5e5e5e solid 2px;
+    background-color: transparent;
+    color: #898989;
+    margin-bottom: 10px;
+}
+
+body{
+    background-color: #007;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+#admin-login-form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+button{
+    background-color: rgb(0, 0, 68);
+    width: 193px;
+    height: 39px;
+    border: #5e5e5e solid 2px;
+    color: #898989;
+}
+
+button:hover{
+    background-color: rgb(0, 0, 164);
+}

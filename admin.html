@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="admin-page/style.css">
+</head>
+
+<body>
+    <form id="add-admin-form">
+        <input type="email" id="admin-email" placeholder="Email" required>
+        <input type="password" id="admin-password" placeholder="Пароль" required>
+        <button type="submit">Добавить администратора</button>
+    </form>
+
+    <script>
+        document.getElementById('add-admin-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+
+            try {
+                const response = await fetch('/admin/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при добавлении администратора');
+                }
+
+                alert('Администратор успешно добавлен');
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Не удалось добавить администратора');
+            }
+        });
+    </script>
+
+
+    <form id="add-product-form">
+        <input type="text" id="product-name" placeholder="Название" required>
+        <input type="text" id="product-brand" placeholder="Бренд" required>
+        <input type="number" id="product-price" placeholder="Цена" required>
+        <input type="number" id="product-quantity" placeholder="Количество" required>
+        <input type="text" id="product-image" placeholder="Ссылка на изображение" required>
+        <button type="submit">Добавить товар</button>
+    </form>
+
+    <form id="delete-product-form">
+        <input type="number" id="product-id" placeholder="ID товара" required>
+        <button type="submit">Удалить товар</button>
+    </form>
+
+    <script>
+        document.getElementById('add-product-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('product-name').value;
+            const brand = document.getElementById('product-brand').value;
+            const price = document.getElementById('product-price').value;
+            const quantity = document.getElementById('product-quantity').value;
+            const image = document.getElementById('product-image').value;
+
+            try {
+                const response = await fetch('/products/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ name, brand, price, quantity, image })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при добавлении товара');
+                }
+
+                alert('Товар успешно добавлен');
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Не удалось добавить товар');
+            }
+        });
+
+        document.getElementById('delete-product-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const productId = document.getElementById('product-id').value;
+
+            try {
+                const response = await fetch(`/products/delete/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при удалении товара');
+                }
+
+                alert('Товар успешно удален');
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Не удалось удалить товар');
+            }
+        });
+    </script>
+
+    <div id="top-products">
+        <h2>Топ самых продаваемых товаров</h2>
+        <ul id="top-products-list"></ul>
+    </div>
+
+    <script>
+        async function loadTopProducts() {
+            try {
+                const response = await fetch('/products/top', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при получении топ товаров');
+                }
+
+                const products = await response.json();
+                const list = document.getElementById('top-products-list');
+                list.innerHTML = '';
+
+                products.forEach(product => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${product.name} - Продано: ${product.total_sold}`;
+                    list.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Не удалось загрузить топ товаров');
+            }
+        }
+
+        loadTopProducts();
+    </script>
+
+    <div id="financials">
+        <h2>Финансовая информация</h2>
+        <p id="total-sales">Общий доход: </p>
+        <p id="total-purchases">Общие расходы: </p>
+    </div>
+
+    <script>
+        async function loadFinancials() {
+            try {
+                const response = await fetch('/financials', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ошибка при получении финансов');
+                }
+
+                const financials = await response.json();
+                document.getElementById('total-sales').textContent = `Общий доход: ${financials.total_sales} BYN`;
+                document.getElementById('total-purchases').textContent = `Общие расходы: ${financials.total_purchases} BYN`;
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Не удалось загрузить финансовую информацию');
+            }
+        }
+
+        loadFinancials();
+    </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/admin-login.html'; // Перенаправление на страницу входа, если токен отсутствует
+            }
+    
+            // Проверка роли администратора
+            fetch('/verify-token', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Не авторизован');
+                }
+            })
+            .catch(() => {
+                localStorage.removeItem('token');
+                window.location.href = '/admin-login.html'; // Перенаправление на страницу входа при ошибке
+            });
+        });
+    </script>
+</body>
+
+</html>

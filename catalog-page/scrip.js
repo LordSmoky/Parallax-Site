@@ -59,7 +59,7 @@ function displayProducts(filterCategory = 'all', searchTerm = '') {
                 <img src="${product.image}" alt="${product.name}" class="product-image" />
                 <h2>${product.name}</h2>
                 <p>Бренд: ${product.brand}</p>
-                <p>Цена: $<span class="product-price">${product.price}</span></p>
+                <p>Цена: <span class="product-price">${product.price}</span> BYN</p>
                 <button class="add-to-cart-button">Добавить в корзину</button>
             `;
             

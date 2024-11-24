@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход администратора</title>
+    <link rel="stylesheet" href="admin-login-page/style.css">
+</head>
+<body>
+    <form id="admin-login-form">
+        <input type="text" id="admin-username" placeholder="Имя пользователя" required>
+        <input type="password" id="admin-password" placeholder="Пароль" required>
+        <button type="submit">Войти</button>
+    </form>
+
+    <script>
+        document.getElementById('admin-login-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+    
+            try {
+                const response = await fetch('/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Неверный логин или пароль');
+                }
+    
+                const data = await response.json();
+                localStorage.setItem('token', data.token);
+                window.location.href = '/admin.html';
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Не удалось войти');
+            }
+        });
+    </script>
+</body>
+</html>

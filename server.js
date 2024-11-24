@@ -328,6 +328,87 @@ app.post('/cart/remove', authenticateToken, async (req, res) => {
     }
 });
 
+app.post('/admin/add', authenticateToken, async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        // Хэшируйте пароль перед сохранением
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await pool.query(
+            'INSERT INTO admins (username, password) VALUES ($1, $2)',
+            [email, hashedPassword]
+        );
+        res.status(201).send('Администратор добавлен');
+    } catch (err) {
+        console.error('Ошибка при добавлении администратора:', err);
+        res.status(500).send('Ошибка сервера');
+    }
+});
+
+app.post('/products/add', authenticateToken, async (req, res) => {
+    const { name, brand, price, quantity, image } = req.body;
+    try {
+        await pool.query(
+            'INSERT INTO products (name, brand, price, quantity, image) VALUES ($1, $2, $3, $4, $5)',
+            [name, brand, price, quantity, image]
+        );
+        res.status(201).send('Товар добавлен');
+    } catch (err) {
+        console.error('Ошибка при добавлении товара:', err);
+        res.status(500).send('Ошибка сервера');
+    }
+});
+
+app.delete('/products/delete/:id', authenticateToken, async (req, res) => {
+    const productId = req.params.id;
+    try {
+        await pool.query('DELETE FROM products WHERE product_id = $1', [productId]);
+        res.sendStatus(204);
+    } catch (err) {
+        console.error('Ошибка при удалении товара:', err);
+        res.status(500).send('Ошибка сервера');
+    }
+});
+
+app.get('/products/top', authenticateToken, async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT p.product_id, p.name, SUM(oi.quantity) AS total_sold
+            FROM order_items oi
+            JOIN products p ON oi.product_id = p.product_id
+            GROUP BY p.product_id
+            ORDER BY total_sold DESC
+            LIMIT 10
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Ошибка при получении топ товаров:', err);
+        res.status(500).send('Ошибка сервера');
+    }
+});
+
+app.get('/financials', authenticateToken, async (req, res) => {
+    try {
+        const salesResult = await pool.query(`
+            SELECT SUM(oi.quantity * p.price) AS total_sales
+            FROM order_items oi
+            JOIN products p ON oi.product_id = p.product_id
+        `);
+
+        const purchaseResult = await pool.query(`
+            SELECT SUM(quantity * cost_price) AS total_purchases
+            FROM purchases
+        `);
+
+        res.json({
+            total_sales: salesResult.rows[0].total_sales || 0,
+            total_purchases: purchaseResult.rows[0].total_purchases || 0
+        });
+    } catch (err) {
+        console.error('Ошибка при получении финансов:', err);
+        res.status(500).send('Ошибка сервера');
+    }
+});
+
 // Обработчики для страниц
 app.get('/catalog', (req, res) => {
     res.sendFile(path.join(__dirname, 'catalog.html'));
@@ -363,6 +444,45 @@ app.get('/orders', authenticateToken, async (req, res) => {
         res.status(500).send(err.message);
     }
 });
+
+async function autoPurchase() {
+    try {
+        const products = await pool.query('SELECT product_id, price, quantity FROM products WHERE quantity < 20');
+        
+        for (const product of products.rows) {
+            const purchaseQuantity = 20 - product.quantity;
+            const costPrice = product.price * 0.8; // Себестоимость на 20% ниже
+
+            await pool.query(
+                'INSERT INTO purchases (product_id, quantity, cost_price) VALUES ($1, $2, $3)',
+                [product.product_id, purchaseQuantity, costPrice]
+            );
+
+            await pool.query(
+                'UPDATE products SET quantity = quantity + $1 WHERE product_id = $2',
+                [purchaseQuantity, product.product_id]
+            );
+        }
+    } catch (err) {
+        console.error('Ошибка при автозакупке:', err);
+    }
+}
+
+
+app.get('/verify-token', authenticateToken, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM admins WHERE admin_id = $1', [req.user.id]);
+        if (result.rows.length === 0) {
+            return res.sendStatus(403); // Доступ запрещен
+        }
+        res.sendStatus(200); // Успешная проверка
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
+// Запускаем автозакупку периодически, например, раз в день
+setInterval(autoPurchase, 10 * 60 * 1000);
 
 // Запускаем сервер
 app.listen(port, '0.0.0.0', () => {

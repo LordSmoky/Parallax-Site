@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 orderElement.innerHTML = `
                     <h2>Заказ ID: ${order.order_id}</h2>
                     <p>Дата заказа: ${new Date(order.date).toLocaleString()}</p>
-                    <p>Общая сумма: ${order.total_price}$</p>
+                    <p>Общая сумма: ${order.total_price} BYN</p>
                     <h3>Предметы:</h3>
                     <ul>
                         ${order.items.map(item => `<li>${item.name} (Количество: ${item.quantity})</li>`).join('')}
