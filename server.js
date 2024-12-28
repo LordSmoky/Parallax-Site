@@ -1,27 +1,25 @@
 const express = require('express');
-const { Pool } = require('pg'); // Импортируем Pool из pg
+const { Pool } = require('pg');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
-const path = require('path'); // Импортируем модуль path
-const jwt = require('jsonwebtoken'); // Импортируем jsonwebtoken
+const path = require('path'); 
+const jwt = require('jsonwebtoken'); 
 const app = express();
 const port = 8080;
 
-// Настройки подключения к базе данных
 const pool = new Pool({
-    user: 'postgres', // Замените на ваше имя пользователя
-    host: 'localhost', // Или IP-адрес вашего сервера
-    database: 'Umbrella2', // Название вашей базы данных
-    password: '123321445', // Замените на ваш пароль
-    port: 5432, // Порт по умолчанию для PostgreSQL
+    user: 'postgres', 
+    host: 'localhost', 
+    database: 'Umbrella2', 
+    password: '123321445', 
+    port: 5432, 
 });
 
 // Middleware
 app.use(bodyParser.json());
-app.use(express.static('./')); // Указываем директорию для статических файлов
+app.use(express.static('./')); 
 
-// Создайте секретный ключ для подписи токенов
-const JWT_SECRET = 'LA01ks92JD83hf'; // Замените на свой секретный ключ
+const JWT_SECRET = 'LA01ks92JD83hf'; 
 
 // Middleware для проверки JWT
 function authenticateToken(req, res, next) {
@@ -35,7 +33,6 @@ function authenticateToken(req, res, next) {
     });
 }
 
-// Обработчик для получения всех продуктов
 app.get('/products', async (req, res) => {
     try {
         const result = await pool.query('SELECT product_id, name, brand, price, quantity, image FROM products');
@@ -45,7 +42,6 @@ app.get('/products', async (req, res) => {
     }
 });
 
-// Обработчик для получения всех пользователей
 app.get('/users', async (req, res) => {
     try {
         const result = await pool.query('SELECT user_id, email, password FROM users');
@@ -55,7 +51,6 @@ app.get('/users', async (req, res) => {
     }
 });
 
-// Обработчик для получения всех уникальных брендов
 app.get('/brands', async (req, res) => {
     try {
         const result = await pool.query('SELECT DISTINCT brand FROM products');
@@ -65,7 +60,6 @@ app.get('/brands', async (req, res) => {
     }
 });
 
-// Обработчик для входа администратора
 app.post('/admin/login', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -82,9 +76,8 @@ app.post('/admin/login', async (req, res) => {
     }
 });
 
-// Обработчик для выхода пользователя
+
 app.post('/logout', (req, res) => {
-    // Просто удаляем токен на клиенте, сервер не хранит состояние сессии
     res.sendStatus(204);
 });
 
@@ -122,7 +115,7 @@ app.post('/cart/add', authenticateToken, async (req, res) => {
 });
 
 
-// Обработчик для получения корзины пользователя
+
 app.get('/cart', authenticateToken, async (req, res) => {
     const userId = req.user.id;
 
@@ -146,7 +139,7 @@ app.post('/cart/update', authenticateToken, async (req, res) => {
     const userId = req.user.id;
 
     try {
-        // Получаем текущее количество товара в корзине
+       
         const result = await pool.query(
             `SELECT quantity FROM cart WHERE user_id = $1 AND product_id = $2`,
             [userId, productId]
@@ -160,27 +153,27 @@ app.post('/cart/update', authenticateToken, async (req, res) => {
         const newQuantity = currentQuantity + change;
 
         if (newQuantity < 1) {
-            // Если количество меньше 1, удаляем товар из корзины
+            
             await pool.query(
                 `DELETE FROM cart WHERE user_id = $1 AND product_id = $2`,
                 [userId, productId]
             );
         } else {
-            // Обновляем количество товара в корзине
+           
             await pool.query(
                 `UPDATE cart SET quantity = $1 WHERE user_id = $2 AND product_id = $3`,
                 [newQuantity, userId, productId]
             );
         }
 
-        res.sendStatus(204); // Успешное обновление без содержимого
+        res.sendStatus(204); 
     } catch (err) {
         res.status(500).send(err.message);
     }
 });
 
 
-// Регистрация пользователя
+
 app.post('/users/add', async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -195,7 +188,7 @@ app.post('/users/add', async (req, res) => {
     }
 });
 
-// Обработчик для входа пользователя
+
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -214,7 +207,7 @@ app.post('/login', async (req, res) => {
 
 
 app.get('/user-orders', authenticateToken, async (req, res) => {
-    const userId = req.user.id; // Получаем userId из токена
+    const userId = req.user.id; 
     try {
         const result = await pool.query(`
             SELECT o.order_id, 
@@ -231,7 +224,7 @@ app.get('/user-orders', authenticateToken, async (req, res) => {
 
 ;app.post('/orders', authenticateToken, async (req, res) => {
     try {
-        const userId = req.user.id; // Используем id пользователя из токена
+        const userId = req.user.id; 
         const cartResponse = await pool.query('SELECT * FROM cart WHERE user_id = $1', [userId]);
         const cartItems = cartResponse.rows;
 
@@ -263,7 +256,7 @@ app.post('/orders/add', authenticateToken, async (req, res) => {
     const userId = req.user.id;
 
     try {
-        // Получаем элементы корзины для пользователя
+        
         const cartResponse = await pool.query('SELECT * FROM cart WHERE user_id = $1', [userId]);
         const cartItems = cartResponse.rows;
 
@@ -271,15 +264,15 @@ app.post('/orders/add', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Корзина пуста' });
         }
 
-        // Создаем новый заказ и возвращаем его ID
+        
         const orderResponse = await pool.query(
             'INSERT INTO orders (user_id, date) VALUES ($1, NOW()) RETURNING order_id',
             [userId]
         );
 
-        const orderId = orderResponse.rows[0].order_id; // Извлекаем ID заказа
+        const orderId = orderResponse.rows[0].order_id; 
 
-        // Вставляем элементы заказа
+        
         for (const item of cartItems) {
             await pool.query(
                 'INSERT INTO order_items (order_id, product_id, quantity) VALUES ($1, $2, $3)',
@@ -287,7 +280,6 @@ app.post('/orders/add', authenticateToken, async (req, res) => {
             );
         }
 
-        // Уменьшение количества товара
         for (const item of cartItems) {
             await pool.query(
                 'UPDATE products SET quantity = quantity - $1 WHERE product_id = $2',
@@ -295,12 +287,11 @@ app.post('/orders/add', authenticateToken, async (req, res) => {
             );
         }
 
-        // Очищаем корзину после оформления заказа
         await pool.query('DELETE FROM cart WHERE user_id = $1', [userId]);
 
-        res.status(201).json({ orderId }); // Возвращаем ID заказа
+        res.status(201).json({ orderId }); 
     } catch (error) {
-        console.error('Ошибка при оформлении заказа:', error.message); // Логируем сообщение об ошибке
+        console.error('Ошибка при оформлении заказа:', error.message); 
         res.status(500).json({ error: 'Ошибка сервера' });
     }
 });
@@ -311,7 +302,6 @@ app.post('/cart/remove', authenticateToken, async (req, res) => {
     const userId = req.user.id;
 
     try {
-        // Удаляем товар из корзины
         const result = await pool.query(
             `DELETE FROM cart WHERE user_id = $1 AND product_id = $2`,
             [userId, productId]
@@ -321,7 +311,7 @@ app.post('/cart/remove', authenticateToken, async (req, res) => {
             return res.status(404).send('Товар не найден в корзине.');
         }
 
-        res.sendStatus(204); // Успешное удаление без содержимого
+        res.sendStatus(204);
     } catch (err) {
         console.error('Ошибка при удалении товара:', err);
         res.status(500).send('Ошибка сервера');
@@ -331,7 +321,6 @@ app.post('/cart/remove', authenticateToken, async (req, res) => {
 app.post('/admin/add', authenticateToken, async (req, res) => {
     const { email, password } = req.body;
     try {
-        // Хэшируйте пароль перед сохранением
         const hashedPassword = await bcrypt.hash(password, 10);
         await pool.query(
             'INSERT INTO admins (username, password) VALUES ($1, $2)',
@@ -409,17 +398,16 @@ app.get('/financials', authenticateToken, async (req, res) => {
     }
 });
 
-// Обработчики для страниц
 app.get('/catalog', (req, res) => {
     res.sendFile(path.join(__dirname, 'catalog.html'));
 });
 
 app.get('/reg', (req, res) => {
-    res.sendFile(path.join(__dirname, 'reg.html')); // Правильный путь к файлу
+    res.sendFile(path.join(__dirname, 'reg.html'));
 });
 
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'log-in.html')); // Правильный путь к файлу
+    res.sendFile(path.join(__dirname, 'log-in.html'));
 });
 
 app.get('/cart', (req, res) => {
@@ -473,18 +461,18 @@ app.get('/verify-token', authenticateToken, async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM admins WHERE admin_id = $1', [req.user.id]);
         if (result.rows.length === 0) {
-            return res.sendStatus(403); // Доступ запрещен
+            return res.sendStatus(403); 
         }
-        res.sendStatus(200); // Успешная проверка
+        res.sendStatus(200); 
     } catch (err) {
         res.status(500).send(err.message);
     }
 });
 
-// Запускаем автозакупку периодически, например, раз в день
 setInterval(autoPurchase, 10 * 60 * 1000);
 
-// Запускаем сервер
 app.listen(port, '0.0.0.0', () => {
     console.log(`Сервер запущен на http://localhost:${port}`);
     });
+
+module.exports = app;

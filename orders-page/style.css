@@ -1,0 +1,17 @@
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.order-column {
+    flex: 1;
+    padding: 10px;
+}
+
+.order-column h2, .order-column h3 {
+    margin-top: 0;
+}
